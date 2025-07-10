@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     triggers {
-        githubPush() // Triggers on push events from GitHub
+        githubPush()
     }
 
     environment {
@@ -20,6 +20,8 @@ pipeline {
 
         stage('Build') {
             steps {
+                // Make mvnw executable before running it
+                sh 'chmod +x mvnw'
                 sh './mvnw clean package'
             }
         }
@@ -29,7 +31,7 @@ pipeline {
                 // Copy the JAR to the EC2 instance
                 sh 'scp -o StrictHostKeyChecking=no target/*.jar ${EC2_USER}@${EC2_HOST}:${REMOTE_PATH}'
 
-                // Run the JAR on the EC2 instance (in the background)
+                // Run the JAR on the EC2 instance in the background
                 sh 'ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_HOST} "nohup java -jar ${REMOTE_PATH} > app.log 2>&1 &"'
             }
         }
