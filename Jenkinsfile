@@ -14,7 +14,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'dev', url: 'https://github.com/your-org/your-repo.git'
+                git branch: 'master', url: 'https://github.com/Shan-kar07/admin-service.git'
             }
         }
 
