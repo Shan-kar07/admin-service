@@ -7,7 +7,7 @@ pipeline {
 
     environment {
         EC2_USER = 'ec2-user'
-        EC2_HOST = '13.61.22.222'
+        EC2_HOST = '16.171.255.74'
         REMOTE_PATH = '/home/ec2-user/app.jar'
     }
 
