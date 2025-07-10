@@ -1,0 +1,37 @@
+pipeline {
+    agent any
+
+    triggers {
+        githubPush() // Triggers on push events from GitHub
+    }
+
+    environment {
+        EC2_USER = 'ec2-user'
+        EC2_HOST = '13.51.72.38'
+        REMOTE_PATH = '/home/ec2-user/app.jar'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'dev', url: 'https://github.com/your-org/your-repo.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh './mvnw clean package'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                // Copy the JAR to the EC2 instance
+                sh 'scp -o StrictHostKeyChecking=no target/*.jar ${EC2_USER}@${EC2_HOST}:${REMOTE_PATH}'
+
+                // Run the JAR on the EC2 instance (in the background)
+                sh 'ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_HOST} "nohup java -jar ${REMOTE_PATH} > app.log 2>&1 &"'
+            }
+        }
+    }
+}
