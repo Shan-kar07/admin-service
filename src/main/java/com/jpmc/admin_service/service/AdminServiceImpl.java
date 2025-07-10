@@ -53,7 +53,7 @@ public class AdminServiceImpl implements AdminService {
         log.info("Fetching rejected requests from DB");
         return adminRepository.findByStatus(Status.REJECTED);
     }
-
+    //This is a method to create add request to admin
     @Override
     @Transactional
     public Admin createSignupRequest(AddRequestDto dto) {
